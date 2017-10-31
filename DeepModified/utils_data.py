@@ -10,7 +10,7 @@ Utility methods for handling the ImageNet data:
 import numpy as np
 import os
 import PIL
-
+import torchvision.transforms as transforms
 
 path_data = "./data"
 
@@ -59,6 +59,8 @@ def get_imagenet_data(net):
     X_pre = np.zeros((X.shape[0], 3, img_dim[0], img_dim[1]))
     for i in range(num_imgs):
         X_pre[i] = net.transformer.preprocess('data', X[i])
+        transf = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])])
+        image = np.swapaxes(X[0], 0, 1) # convert to format H*W
     X = X_pre
         
     return X, X_im, X_filenames
