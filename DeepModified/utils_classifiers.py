@@ -19,6 +19,7 @@ from torch.autograd import Variable
 import torchvision
 import torchvision.models as models
 import torchvision.transforms as transforms
+from  torch import Tensor
 
            
      
@@ -76,7 +77,7 @@ def get_caffenet(netname):
      
 
 
-def forward_pass(net, x, blobnames='prob', start='data',HAS_CUDA=True):
+def forward_pass(model, x, blobnames='prob', start='data',HAS_CUDA=True):
     ''' 
     Defines a forward pass (modified for our needs) 
     Input:      net         the network (caffe model)
@@ -85,19 +86,31 @@ def forward_pass(net, x, blobnames='prob', start='data',HAS_CUDA=True):
                             default is output layer ('prob')
                 start       in which layer to start the forward pass
     '''    
-    
+    #print("shape x:{}".format(x.shape))
     # get input into right shape
     if np.ndim(x)==3:
-        x = x[np.newaxis]
+        #x = x[np.newaxis]
+        #print(x.shape)
+        x=np.swapaxes(x,1,2)
+        x=np.swapaxes(x,0,2)
         transf = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])])
-        image = transf(image)
+        image = transf(x)
         image=Variable(image)
-        image.unsqueeze(0)
+        image = image.unsqueeze(0)
+        image = image if not HAS_CUDA else image.cuda(gpu_id)
+
+    elif np.ndim(x)==2:
+        x_new=x.reshape(x.shape[0],3,224,224)
+        x_new=np.swapaxes(x_new,2,3)
+        x_new=np.swapaxes(x_new,1,3)
+        #print("{}".format(x_new[0].shape))
+        transf = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])])
+        images =[transf(x_new[i]) for i in range(x_new.shape[0])]
+
+        imgTen=torch.stack(images)
+        image=Variable(imgTen)
         image = image if not HAS_CUDA else image.cuda(gpu_id)
           
-    if np.ndim(x)<4:
-        input_shape = net.blobs[start].data.shape
-        x = x.reshape([x.shape[0]]+list(input_shape)[1:])
 
     # reshape net so it fits the batchsize (implicitly given by x)
     
@@ -106,5 +119,6 @@ def forward_pass(net, x, blobnames='prob', start='data',HAS_CUDA=True):
     predictions = predictions.data.cpu() # sposto il tensore dalla gpu alla ram
     predictions = predictions.numpy() # trasformo il tensore pytorch in numpy
     
-    return returnVals
+    #print("prediction shapes:{}".format(predictions.shape))
+    return [predictions]
 

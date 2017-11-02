@@ -16,6 +16,7 @@ def plot_results(x_test, x_test_im, sensMap, predDiff, tarFunc, classnames, test
     '''
     imsize = x_test.shape  
     
+    #print(prediff[0])
     tarIdx = np.argmax(tarFunc(x_test)[-1])
     tarClass = classnames[tarIdx]
     #tarIdx = 287
@@ -28,8 +29,8 @@ def plot_results(x_test, x_test_im, sensMap, predDiff, tarFunc, classnames, test
     frame.axes.get_xaxis().set_ticks([])
     frame.axes.get_yaxis().set_ticks([]) 
     plt.subplot(2,2,2)
-    plt.imshow(sensMap, cmap=cm.Greys_r, interpolation='nearest')
-    plt.title('sensitivity map')
+    #plt.imshow(sensMap, cmap=cm.Greys_r, interpolation='nearest')
+    #plt.title('sensitivity map')
     frame = pylab.gca()
     frame.axes.get_xaxis().set_ticks([])
     frame.axes.get_yaxis().set_ticks([]) 

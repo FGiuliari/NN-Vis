@@ -21,7 +21,7 @@ class marg_sampler_imagenet:
     Marginal sampler for image patches
     '''
     
-    def __init__(self, X, net):
+    def __init__(self, X):
         ''' 
         Sampler to draw marginal samples 
         Input:  
@@ -44,8 +44,8 @@ class marg_sampler_imagenet:
                 samples         the marginal samples, in a matrix of size
                                 (numSamples)*(number of sampleIndices)
         '''   
-        #return np.take(self.X[:numSamples], sampleIndices.ravel(), axis=1)
-        return np.random.rand(10,300)*255
+        return np.take(self.X[:numSamples], sampleIndices.ravel(), axis=1)
+        #return np.random.rand(10,300)*255
 
 
 class cond_sampler_imagenet:
@@ -54,7 +54,7 @@ class cond_sampler_imagenet:
     using a multivariate Gaussian distribution
     '''
     
-    def __init__(self, win_size, padding_size, image_dims, netname, num_samples_fit=20000):
+    def __init__(self, win_size, padding_size, image_dims, num_samples_fit=20000):
         '''
         Sampler to conditionally sample pixel patches using a gaussian model
         Input: 
@@ -74,7 +74,7 @@ class cond_sampler_imagenet:
         self.win_size = win_size
         self.padding_size = padding_size
         self.image_dims = image_dims
-        self.netname = netname
+        self.netname = "test"
         self.num_samples_fit = num_samples_fit
 
         self.path_folder = './gaussians/'
@@ -117,10 +117,10 @@ class cond_sampler_imagenet:
                  
             for c in [0,1,2]:
  
-                net = utlC.get_caffenet(self.netname)
+                #net = utlC.get_caffenet(self.netname)
 
                 # get the imagenet data
-                X, _, _ = utlD.get_imagenet_data(net)
+                X, _, _ = utlD.get_imagenet_data()
                 
                 # get samples for fitting the distribution
                 patchesMat = np.empty((0,self.patchSize*self.patchSize), dtype=np.float)
@@ -327,8 +327,8 @@ def save_minmax_values(netname):
     values of the data (which is being used to cut off the values in the
     sampler so that we don't have overflowing values)
     '''
-    net = utlC.get_caffenet(netname)
-    X, _, _ = utlD.get_imagenet_data(net)
+    #net = utlC.get_caffenet(netname)
+    X, _, _ = utlD.get_imagenet_data()
     minMaxVals = np.zeros((2,3,X.shape[-1],X.shape[-1]))
     minMaxVals[0] = np.min(X,axis=0)
     minMaxVals[1] = np.max(X,axis=0)
