@@ -59,15 +59,15 @@ win_size = 10               # k in alg 1 (see paper)
 overlapping = False
 
 # settings for sampling 
-sampl_style = 'marginal' # choose: conditional / marginal
-num_samples = 4
+sampl_style = 'conditional' # choose: conditional / marginal
+num_samples = 10
 padding_size = 2            # important for conditional sampling,
                             # l = win_size+2*padding_size in alg 1
                             # (see paper)
 
 # set the batch size - the larger, the faster computation will be
 # (if caffe crashes with memory error, reduce the batch size)
-batch_size = 8
+batch_size = 30
 
 
 # ------------------------ SET-UP ------------------------
@@ -109,7 +109,7 @@ for test_idx in test_indices:
     print("{}:{}".format(X_filenames[test_idx],y_pred_label))                     
     # get the path for saving the results
     if sampl_style == 'conditional':
-        save_path = path_results+'{}_{}_winSize{}_condSampl_numSampl{}_paddSize{}_{}'.format(X_filenames[test_idx],y_pred_label,win_size,num_samples,padding_size,netname)
+        save_path = path_results+'{}_{}_winSize{}_condSampl_numSampl{}_paddSize{}_{}'.format(X_filenames[test_idx],y_pred_label,win_size,num_samples,padding_size,"test")
     elif sampl_style == 'marginal':
         save_path = path_results+'{}_{}_winSize{}_margSampl_numSampl{}_{}'.format(X_filenames[test_idx],y_pred_label,win_size,num_samples,"test")
 
@@ -133,7 +133,7 @@ for test_idx in test_indices:
     pda = PredDiffAnalyser(x_test, target_func, sampler, num_samples=num_samples, batch_size=batch_size)
     pred_diff = pda.get_rel_vect(win_size=win_size, overlap=overlapping)
     #print(len(pred_diff))
-    # plot and save the results
+    #plot and save the results
     utlV.plot_results(x_test, x_test_im, None, pred_diff[0], target_func, classnames, test_idx, save_path)
     np.savez(save_path, *pred_diff)
     print("--- Total computation took {:.4f} minutes ---".format((time.time() - start_time)/60))

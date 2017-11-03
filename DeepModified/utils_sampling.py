@@ -87,9 +87,9 @@ class cond_sampler_imagenet:
         self.meanVects, self.covMats = self._get_gauss_params()
         
         # the min/max values for the features seen in the data, so that we can cut off overfloating values
-        if not os.path.exists(self.path_folder+'{}_minMaxVals.npy'.format(netname)):
+        if not os.path.exists(self.path_folder+'{}_minMaxVals.npy'.format("test")):
             save_minmax_values(self.netname)
-        self.minMaxVals = np.load(self.path_folder+'{}_minMaxVals.npy'.format(netname))
+        self.minMaxVals = np.load(self.path_folder+'{}_minMaxVals.npy'.format("test"))
         
         self.location = None
         self.dotProdForMean = None
@@ -104,8 +104,8 @@ class cond_sampler_imagenet:
         means = np.zeros((3, self.patchSize*self.patchSize))
         covs = np.zeros((3, self.patchSize*self.patchSize, self.patchSize*self.patchSize)) 
 
-        path_mean = self.path_folder+'{}_means{}_indep'.format(self.netname, self.patchSize)
-        path_cov = self.path_folder+'{}_covs{}_indep'.format(self.netname, self.patchSize)
+        path_mean = self.path_folder+'{}_means{}_indep'.format("test", self.patchSize)
+        path_cov = self.path_folder+'{}_covs{}_indep'.format("test", self.patchSize)
         
         # check if  values are already precomputed and saved; otherwise do so first
         if os.path.exists(path_mean+'.npy') and os.path.exists(path_cov+'.npy'):
@@ -124,7 +124,7 @@ class cond_sampler_imagenet:
                 
                 # get samples for fitting the distribution
                 patchesMat = np.empty((0,self.patchSize*self.patchSize), dtype=np.float)
-                for i in xrange(int(self.num_samples_fit/X.shape[0])+1):
+                for i in range(int(self.num_samples_fit/X.shape[0])+1):
                     # get a random (upper left) position of the patch
                     idx = random.sample(range((self.image_dims[0]-self.patchSize)*(self.image_dims[1]-self.patchSize)), 1)[0]
                     idx = np.unravel_index(idx, (self.image_dims[0]-self.patchSize, self.image_dims[1]-self.patchSize))   
@@ -161,7 +161,7 @@ class cond_sampler_imagenet:
         mu1 = np.take(self.meanVects[channel], inPatchIdx)
         mu2 = np.delete(self.meanVects[channel], inPatchIdx)       
         
-        path_dotProdForMean = self.path_folder+'{}_cov{}_win{}_dotProdForMean_{}_{}'.format(self.netname, self.patchSize, self.win_size, inPatchIdx[0], inPatchIdx[-1])     
+        path_dotProdForMean = self.path_folder+'{}_cov{}_win{}_dotProdForMean_{}_{}'.format("test", self.patchSize, self.win_size, inPatchIdx[0], inPatchIdx[-1])     
         
         # get the dot product for the mean (check if precomputed, otherwise do this first)
         if not os.path.exists(path_dotProdForMean+'.npy'):
@@ -178,7 +178,7 @@ class cond_sampler_imagenet:
         # with the dotproduct, we can now evaluate the conditional mean
         cond_mean = mu1 + np.dot(dotProdForMean, x2-mu2)
         
-        path_condCov = self.path_folder+'{}_cov{}_win{}_cond_cov_{}_{}_indep'.format(self.netname, self.patchSize, self.win_size, inPatchIdx[0], inPatchIdx[-1])
+        path_condCov = self.path_folder+'{}_cov{}_win{}_cond_cov_{}_{}_indep'.format("test", self.patchSize, self.win_size, inPatchIdx[0], inPatchIdx[-1])
         
         # get the conditional covariance
         if not os.path.exists(path_condCov+'.npy'):        
@@ -208,7 +208,7 @@ class cond_sampler_imagenet:
         subset3d = np.unravel_index(sampleIndices.ravel(), [3, self.image_dims[0], self.image_dims[1]])
         subset2d = [subset3d[1],subset3d[2]]
         # we will need this to find the index of the sample inside the surrounding patch
-        inPatchIdx = np.tile(np.array([i for i in xrange(self.patchSize*self.patchSize)]),3).reshape(3,self.patchSize,self.patchSize)
+        inPatchIdx = np.tile(np.array([i for i in range(self.patchSize*self.patchSize)]),3).reshape(3,self.patchSize,self.patchSize)
         # indices of the subset relative to the whole feature map x
         upperIdx = subset2d[0][0]
         lowerIdx = subset2d[0][-1]
@@ -311,7 +311,7 @@ class cond_sampler_imagenet:
         minVals_sample = self.minMaxVals[0].ravel()[sampleIndices.ravel()] 
         maxVals_sample = self.minMaxVals[1].ravel()[sampleIndices.ravel()] 
         # clip the values
-        for i in xrange(samples.shape[0]):
+        for i in range(samples.shape[0]):
             samples[i][samples[i]<minVals_sample] = minVals_sample[samples[i]<minVals_sample]
             samples[i][samples[i]>maxVals_sample] = maxVals_sample[samples[i]>maxVals_sample]    
                 

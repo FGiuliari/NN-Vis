@@ -1,2 +1,5 @@
 /.vscode
 /py3env
+/gaussians
+/results/*.npz
+/**/*.pyc
