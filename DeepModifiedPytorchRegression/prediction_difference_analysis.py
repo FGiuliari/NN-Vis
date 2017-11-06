@@ -140,8 +140,8 @@ class PredDiffAnalyser:
 #                sys.stdout.write("\033[F")
                 
             # evaluate the rest that didn't fill last batch
-            pred_diffs = self._get_rel_vect_subset(windows[:win_idx+1])
-            for w in range(win_idx+1):
+            pred_diffs = self._get_rel_vect_subset(windows[:win_idx])
+            for w in range(win_idx):
                 window = windows[w]
                 for b in range(self.num_blobs):
                     rel_vects[b][window[window<self.num_feats]] += pred_diffs[b][w]
@@ -150,7 +150,10 @@ class PredDiffAnalyser:
         # get average relevance of each feature
         for b in range(self.num_blobs):
             rel_vects[b][counts!=0] = ( rel_vects[b][counts!=0]/counts[counts!=0][:,np.newaxis] ).astype(np.float16)
-
+        
+        from matplotlib import pyplot as plt
+        plt.matshow(np.reshape(counts,(224,224)))
+        plt.savefig('asd.png')
             
         return rel_vects
        
