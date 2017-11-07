@@ -59,7 +59,7 @@ win_size = 10               # k in alg 1 (see paper)
 overlapping = False
 
 # settings for sampling 
-sampl_style = 'marginal' # choose: conditional / marginal
+sampl_style = 'conditional' # choose: conditional / marginal
 num_samples = 10
 padding_size = 2            # important for conditional sampling,
                             # l = win_size+2*padding_size in alg 1
