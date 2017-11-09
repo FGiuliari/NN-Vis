@@ -94,11 +94,14 @@ def get_imagenet_data(net=None):
     X_filenames = []
     for i in range(len(img_list)):
         np_img = np.float32(Image.open('{}/{}'.format(path_data, img_list[i])))
-        if np_img.shape[0] >= img_dim[0] and np_img.shape[1] >= img_dim[1]:
-            X[i]=np.float32(Image.open('{}/{}'.format(path_data, img_list[i])).resize((224,224),Image.NEAREST))
-            X_filenames.append(img_list[i].replace(".",""))
-        else:
-            print("Skipped ",img_list[i],", image dimensions were too small.")
+        #if np_img.shape[0] >= img_dim[0] and np_img.shape[1] >= img_dim[1]:
+        img = np.float32(Image.open('{}/{}'.format(path_data, img_list[i])).resize((224,224),Image.NEAREST))
+        img = np.asarray([img] * 3)
+        img = np.transpose(img, (1,2,0))
+        X[i] = img
+        X_filenames.append(img_list[i].replace(".",""))
+        #else:
+        #    print("Skipped ",img_list[i],", image dimensions were too small.")
 
     # the number of images we found in the folder
     num_imgs = X.shape[0]

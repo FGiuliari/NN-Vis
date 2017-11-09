@@ -234,10 +234,10 @@ class PredDiffAnalyser:
                     #oddsTarVal = tarVal_laplace/(1-tarVal_laplace)
                     #oddsAvgP = avgP_laplace/(1-avgP_laplace)
                     # take average over feature maps
-                    pd = self.true_tar_val[b]-avgP
+                    pd = avgP - self.true_tar_val[b]
                 # if we do not deal with probabilities, we just return the distance to the average
                 else:
-                    pd = self.true_tar_val[b] - avgP    
+                    pd = avgP - self.true_tar_val[b]    
                 # avg/max for the feature maps if we have feature maps in conv layers
                 pd = pd.reshape((pd.shape[0], -1))
                 pred_diffs[t] = np.average(pd, axis=1) # will only have an effect for convolutional layers

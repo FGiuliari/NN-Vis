@@ -44,8 +44,8 @@ class marg_sampler_imagenet:
                 samples         the marginal samples, in a matrix of size
                                 (numSamples)*(number of sampleIndices)
         '''   
-        return np.take(self.X[:numSamples], sampleIndices.ravel(), axis=1)
-        #return np.random.rand(10,300)*255
+        #return np.take(self.X[:numSamples], sampleIndices.ravel(), axis=1)
+        return np.random.rand(numSamples,300)*0
 
 
 class cond_sampler_imagenet:

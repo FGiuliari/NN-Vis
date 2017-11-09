@@ -37,7 +37,8 @@ import torchvision
 import torchvision.models as models
 import torchvision.transforms as transforms
 
-model = models.vgg16_bn(pretrained=True)
+model = torch.load('complete_net.pth')
+#model = models.vgg16_bn(pretrained=True)
 model.eval() # congela i gradienti (salva memoria e velocizza le prestazioni)
 print(model)
 
@@ -59,8 +60,8 @@ win_size = 10               # k in alg 1 (see paper)
 overlapping = False
 
 # settings for sampling 
-sampl_style = 'conditional' # choose: conditional / marginal
-num_samples = 10
+sampl_style = 'marginal' # choose: conditional / marginal
+num_samples = 1
 padding_size = 2            # important for conditional sampling,
                             # l = win_size+2*padding_size in alg 1
                             # (see paper)
@@ -93,7 +94,7 @@ if not os.path.exists(path_results):
 #net.blobs['data'].reshape(batch_size, X_test.shape[1], X_test.shape[2], X_test.shape[3])
 
 # target function (mapping input features to output probabilities)
-target_func = lambda x: utlC.forward_pass(model, x, None,HAS_CUDA=HAS_CUDA,REGRESSION=False)
+target_func = lambda x: utlC.forward_pass(model, x, None,HAS_CUDA=HAS_CUDA,REGRESSION=True)
 
 # for the given test indices, do the prediction difference analysis
 for test_idx in test_indices:
@@ -103,7 +104,7 @@ for test_idx in test_indices:
     # get the image for plotting (not preprocessed)
     x_test_im = X_test_im[test_idx]
     # prediction of the network
-    y_pred = utlC.forward_pass(model, x_test, ['prob'],HAS_CUDA=HAS_CUDA,REGRESSION=False)[0][0,0]
+    y_pred = utlC.forward_pass(model, x_test, ['prob'],HAS_CUDA=HAS_CUDA,REGRESSION=True)[0][0,0]
     y_pred_label = "img"
     
     print("{}:{}".format(X_filenames[test_idx],y_pred_label))                     
