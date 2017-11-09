@@ -77,7 +77,7 @@ def get_caffenet(netname):
      
 
 
-def forward_pass(model, x, blobnames='prob', start='data',HAS_CUDA=True,gpu_id=0):
+def forward_pass(model, x, blobnames='prob', start='data',HAS_CUDA=True,gpu_id=0,REGRESSION=True):
     ''' 
     Defines a forward pass (modified for our needs) 
     Input:      net         the network (caffe model)
@@ -120,6 +120,8 @@ def forward_pass(model, x, blobnames='prob', start='data',HAS_CUDA=True,gpu_id=0
     #predictions = soft(predictions)
     predictions = predictions.data.cpu() # sposto il tensore dalla gpu alla ram
     predictions = predictions.numpy() # trasformo il tensore pytorch in numpy
+    if not REGRESSION:
+        predictions = predictions[:,0].reshape(predictions.shape[0],-1)
 
     
     #print("prediction shapes:{}".format(predictions.shape))

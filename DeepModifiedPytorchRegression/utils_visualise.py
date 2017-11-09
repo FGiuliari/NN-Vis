@@ -35,7 +35,7 @@ def plot_results(x_test, x_test_im, sensMap, predDiff, tarFunc, classnames, test
     frame.axes.get_xaxis().set_ticks([])
     frame.axes.get_yaxis().set_ticks([]) 
     plt.subplot(2,2,3)
-    p = predDiff.reshape((imsize[1],imsize[2],-1))[:,:,tarIdx]
+    p = np.squeeze(predDiff.reshape((imsize[1],imsize[2],-1)))
     plt.imshow(p, cmap=cm.seismic, vmin=-np.max(np.abs(p)), vmax=np.max(np.abs(p)), interpolation='nearest')
     plt.colorbar()
     #plt.imshow(np.abs(p), cmap=cm.Greys_r)

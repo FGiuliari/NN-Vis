@@ -93,7 +93,7 @@ if not os.path.exists(path_results):
 #net.blobs['data'].reshape(batch_size, X_test.shape[1], X_test.shape[2], X_test.shape[3])
 
 # target function (mapping input features to output probabilities)
-target_func = lambda x: utlC.forward_pass(model, x, None,HAS_CUDA=HAS_CUDA)
+target_func = lambda x: utlC.forward_pass(model, x, None,HAS_CUDA=HAS_CUDA,REGRESSION=False)
 
 # for the given test indices, do the prediction difference analysis
 for test_idx in test_indices:
@@ -103,8 +103,8 @@ for test_idx in test_indices:
     # get the image for plotting (not preprocessed)
     x_test_im = X_test_im[test_idx]
     # prediction of the network
-    y_pred = np.argmax(utlC.forward_pass(model, x_test, ['prob'],HAS_CUDA=HAS_CUDA))
-    y_pred_label = classnames[y_pred]
+    y_pred = utlC.forward_pass(model, x_test, ['prob'],HAS_CUDA=HAS_CUDA,REGRESSION=False)[0][0,0]
+    y_pred_label = "img"
     
     print("{}:{}".format(X_filenames[test_idx],y_pred_label))                     
     # get the path for saving the results
