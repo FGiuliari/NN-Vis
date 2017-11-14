@@ -45,7 +45,7 @@ class marg_sampler_imagenet:
                                 (numSamples)*(number of sampleIndices)
         '''   
         #return np.take(self.X[:numSamples], sampleIndices.ravel(), axis=1)
-        return np.random.rand(numSamples,300)*0
+        return np.random.rand(numSamples,sampleIndices.shape[0])*0
 
 
 class cond_sampler_imagenet:

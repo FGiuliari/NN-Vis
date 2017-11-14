@@ -3,3 +3,6 @@
 /gaussians
 /**/*.npz
 /**/*.pyc
+*.zip
+*.pth
+*.pth.old

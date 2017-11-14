@@ -54,14 +54,14 @@ if HAS_CUDA:
     model.cuda(gpu_id)
 
 # window size (i.e., the size of the pixel patch that is marginalised out in each step)
-win_size = 10               # k in alg 1 (see paper)
+win_size = 20               # k in alg 1 (see paper)
 
 # indicate whether windows should be overlapping or not
 overlapping = False
 
 # settings for sampling 
 sampl_style = 'marginal' # choose: conditional / marginal
-num_samples = 1
+num_samples =1
 padding_size = 2            # important for conditional sampling,
                             # l = win_size+2*padding_size in alg 1
                             # (see paper)
@@ -84,7 +84,7 @@ if not test_indices:
     test_indices = [i for i in range(X_test.shape[0])]      
 
 # make folder for saving the results if it doesn't exist
-path_results = './results/'
+path_results = './results/{}{}{}/'.format(sampl_style,win_size,overlapping)
 if not os.path.exists(path_results):
     os.makedirs(path_results)          
           
@@ -136,7 +136,7 @@ for test_idx in test_indices:
     #print(len(pred_diff))
     #plot and save the results
     utlV.plot_results(x_test, x_test_im, None, pred_diff[0], target_func, classnames, test_idx, save_path)
-    np.savez(save_path, *pred_diff)
+    #np.savez(save_path, *pred_diff)
     print("--- Total computation took {:.4f} minutes ---".format((time.time() - start_time)/60))
     
         
